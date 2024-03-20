@@ -63,6 +63,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return authenticationManager.authenticate(authToken);
     }
 
+    // 로그인 성공 시 여기서 토큰 생성
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
@@ -87,6 +88,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value());
     }
 
+    // 로그인 실패
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
 
@@ -105,6 +107,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshRepository.save(refreshEntity);
     }
 
+    // 쿠키 생성
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);

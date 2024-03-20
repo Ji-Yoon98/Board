@@ -44,6 +44,7 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    // 비밀번호 암호화
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
@@ -75,37 +76,31 @@ public class SecurityConfig {
                 }));
 
         //csrf disable
-        http
-                .csrf((auth) -> auth.disable());
+        http.csrf((auth) -> auth.disable());
 
         //From 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
+        http.formLogin((auth) -> auth.disable());
 
         //http basic 인증 방식 disable
-        http
-                .httpBasic((auth) -> auth.disable());
+        http.httpBasic((auth) -> auth.disable());
 
+        // 경로별 인가
+        http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/login", "/", "/join").permitAll()
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/reissue").permitAll()
+                .anyRequest().authenticated());
 
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/reissue").permitAll()
-                        .anyRequest().authenticated());
-
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-        http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshRepository), UsernamePasswordAuthenticationFilter.class);
+        
+        http.addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
 
         //세션 설정
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement((session) -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

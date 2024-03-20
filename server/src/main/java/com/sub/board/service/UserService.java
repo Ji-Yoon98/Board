@@ -7,23 +7,26 @@ import com.sub.board.dto.JoinDTO;
 import com.sub.board.entity.UserEntity;
 import com.sub.board.repository.UserRepository;
 
+
 @Service
-public class JoinService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public JoinService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-
+    
+    // 회원가입
     public void joinProcess(JoinDTO joinDTO) {
 
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
 
+        // id 중복 체크
         Boolean isExist = userRepository.existsByUsername(username);
 
         if (isExist) {
@@ -43,4 +46,5 @@ public class JoinService {
 
         userRepository.save(data);
     }
+
 }

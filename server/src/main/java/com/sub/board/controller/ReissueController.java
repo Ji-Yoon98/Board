@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sub.board.entity.RefreshEntity;
 import com.sub.board.jwt.JWTUtil;
@@ -16,7 +16,7 @@ import com.sub.board.repository.RefreshRepository;
 
 import java.util.Date;
 
-@Controller
+@RestController
 @ResponseBody
 public class ReissueController {
 

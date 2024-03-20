@@ -1,19 +1,19 @@
 package com.sub.board.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sub.board.dto.JoinDTO;
-import com.sub.board.service.JoinService;
+import com.sub.board.service.UserService;
 
-@Controller
+@RestController
 @ResponseBody
-public class JoinController {
+public class UserController {
 
-    private final JoinService joinService;
+    private final UserService joinService;
 
-    public JoinController(JoinService joinService) {
+    public UserController(UserService joinService) {
 
         this.joinService = joinService;
     }
