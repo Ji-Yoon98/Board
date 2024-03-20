@@ -78,6 +78,7 @@ public class JWTFilter extends OncePerRequestFilter {
         // 스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         
+        // 해당 유저 등록 -> 일시적인 세션
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
