@@ -7,19 +7,16 @@ import com.sub.board.dto.JoinDTO;
 import com.sub.board.entity.UserEntity;
 import com.sub.board.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-    
     // 회원가입
     public void joinProcess(JoinDTO joinDTO) {
 
@@ -36,6 +33,7 @@ public class UserService {
 
         UserEntity data = new UserEntity();
 
+        // id에 admin이 포함되면 admin 권한 넣어줌
         if(username.contains("admin")) {
             data.setRole("ROLE_ADMIN");
         }
