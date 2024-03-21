@@ -29,7 +29,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
-        //path and method verify
+        // path and method verify
         String requestUri = request.getRequestURI();
         if (!requestUri.matches("^\\/logout$")) {
 
@@ -43,7 +43,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        //get refresh token
+        // get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
@@ -54,14 +54,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
             }
         }
 
-        //refresh null check
+        // refresh null check
         if (refresh == null) {
 
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        //expired check
+        // expired check
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
@@ -75,25 +75,25 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
 
-            //response status code
+            // response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        //DB에 저장되어 있는지 확인
+        // DB에 저장되어 있는지 확인
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         if (!isExist) {
 
-            //response status code
+            // response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-        //로그아웃 진행
-        //Refresh 토큰 DB에서 제거
+        // 로그아웃 진행
+        // Refresh 토큰 DB에서 제거
         refreshRepository.deleteByRefresh(refresh);
 
-        //Refresh 토큰 Cookie 값 0
+        // Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
