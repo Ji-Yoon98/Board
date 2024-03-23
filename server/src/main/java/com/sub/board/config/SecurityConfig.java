@@ -1,6 +1,8 @@
 package com.sub.board.config;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -10,7 +12,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -23,6 +27,7 @@ import com.sub.board.jwt.JWTUtil;
 import com.sub.board.jwt.LoginFilter;
 import com.sub.board.repository.RefreshRepository;
 
+import java.io.IOException;
 import java.util.Collections;
 
 @Configuration
@@ -100,4 +105,18 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+}
+
+// 예외처리
+class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException authException) throws IOException, ServletException {
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("{\"code:\": \"NP\", \"message\": \"Authorization Failed.\"}");
+    }
+
 }
